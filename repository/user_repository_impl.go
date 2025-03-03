@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"user-rest-app/config"
 	"user-rest-app/models"
 
 	"gorm.io/gorm"
@@ -12,8 +11,8 @@ type UserRepositoryImpl struct {
 }
 
 // NewUserRepositoryImpl creates a new instance of UserRepositoryImpl
-func NewUserRepositoryImpl() UserRepository {
-	return &UserRepositoryImpl{DB: config.ConnectDB()}
+func NewUserRepositoryImpl(db *gorm.DB) UserRepository {
+	return &UserRepositoryImpl{db}
 }
 
 // CreateUser inserts a new user record
@@ -24,7 +23,13 @@ func (repo *UserRepositoryImpl) CreateUser(user *models.User) error {
 // GetUserByID retrieves a user by ID, including their role
 func (repo *UserRepositoryImpl) GetUserByID(id string) (models.User, error) {
 	var user models.User
-	err := repo.DB.Preload("Role").Where("id = ?", id).First(&user).Error
+	// early loading or preload
+
+	err := repo.DB.Preload("Role").Where("id = ?", id).First(&
+user).Error
+// Preload : Eager loading ===> associated data (role data)
+		// without Preload : GORM will not load the associated data
+		// lazy loading : Association method 
 	return user, err
 }
 
