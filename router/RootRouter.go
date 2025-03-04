@@ -24,9 +24,9 @@ func SetupRootRouter() *mux.Router {
 	// required services , repos ==> objects I will create it here
 	
 	r := mux.NewRouter()
-	r.PathPrefix("/api").Subrouter()
+	apiRouter :=r.PathPrefix("/api").Subrouter()
 // /api as a common spec for all routes
-SetupUserRouter(r, UserService)
+SetupUserRouter(apiRouter, UserService)
 	// handling routing .
 	// movements 
 	return r 
